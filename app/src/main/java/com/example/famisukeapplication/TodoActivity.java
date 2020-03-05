@@ -68,15 +68,6 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
-//        //permission Check
-//        if (ActivityCompat.checkSelfPermission(TodoActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            Log.i("Confirm", "Main onCreate checkSelfPermission");
-//            String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
-//            ActivityCompat.requestPermissions(TodoActivity.this, permissions, 1000);
-//            return;
-//        }
-
     }
 
     //TextViewに日付を表示するための処理
@@ -92,10 +83,6 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //addButtonClick
     public void onAddButtonClick(View view){
-//        Log.i("Confirm", "Todo startButtonClick");
-//        Intent intent = new Intent(TodoActivity.this, FamisukeService.class);
-//        startService(intent);
-
         Log.i("Confirm", "Todo onAddButtonClick");
         Intent intent = new Intent(TodoActivity.this, InputActivity.class);
         startActivity(intent);
@@ -104,9 +91,6 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
     //completeButtonClick
     public void onCompleteButtonClick(View view){
         Log.i("Confirm", "Todo onCompleteButtonClick");
-//        Log.i("Confirm", "Todo onStopButtonClick");
-//        Intent stopServiceIntent = new Intent(TodoActivity.this, FamisukeService.class);
-//        stopService(stopServiceIntent);
 
         Intent intent = new Intent(TodoActivity.this, ConfirmActivity.class);
         intent.putExtra("works", works);
