@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">FamisukeApplication</string>
+    <string name="tvMainTitle">ファミ助アプリへようこそ！</string>
+    <string name="tvInputTitle">作業内容を入力してください</string>
+    <string name="tvInputDate">日付：</string>
+    <string name="tvInputWork">内容：</string>
+    <string name="tvInputField">圃場：</string>
+    <string name="tvInputTime">時間：</string>
+    <string name="tvInputDetail">詳細：</string>
+    <string name="tvInputConfirm">この内容でよろしいですか</string>
+
+    <string name="tvTodoTitle">やることリスト</string>
+    <string name="tvConfirm">今日の作業の内容を確認してください</string>
+    <string name="tvListFromTo">～</string>
+
+    <string name="btnInput">入力する</string>
+    <string name="btnStart">開始する</string>
+    <string name="btnBack">戻る</string>
+    <string name="btnComplete">完了する</string>
+    <string name="btnAdd">追加する</string>
+
+    <string name="btnEdit">変更する</string>
+    <string name="btnResister">登録する</string>
+    <string name="btnDelete">削除する</string>
+</resources>
