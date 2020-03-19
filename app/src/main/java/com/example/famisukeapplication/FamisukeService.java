@@ -46,7 +46,7 @@ public class FamisukeService extends Service {
                 && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0,
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0,
                 locationListener);
     }
 
@@ -134,7 +134,6 @@ public class FamisukeService extends Service {
             String urlStr = "https://sakuranbo-mekaru2.mybluemix.net/common/android_post_cloudant";
 
             HttpsURLConnection con = null;
-            StringBuffer result = new StringBuffer();
 
             try{
                 URL url = new URL(urlStr);
@@ -152,7 +151,8 @@ public class FamisukeService extends Service {
                     JSONObject jsonObject = new JSONObject(jsonData);
                     String jsonText = jsonObject.toString();
                     Log.i("Confirm", "AsyncTask doInBackground jsonText: " + jsonText);
-                    PrintStream printStream = new PrintStream(con.getOutputStream());
+                    //PrintStream printStream = new PrintStream(con.getOutputStream());
+                    PrintStream printStream = new PrintStream(outputStream);
                     printStream.print(jsonText);
                     printStream.close();
                 }

@@ -8,31 +8,43 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class TestAdapter extends BaseAdapter {
 
-    private LayoutInflater inflater;
-    private int layoutId;
-    private String[] worksList;
-    private String[] fieldList;
-    private String[] fromDateList;
-    private String[] toDateList;
+    private LayoutInflater _inflater;
+    private int _layoutId;
+    private ArrayList<String> _codesList = new ArrayList<>();
+    private ArrayList<String> _fieldsList = new ArrayList<>();
+    private ArrayList<String> _fromTimesList = new ArrayList<>();
+    private ArrayList<String> _toTimesList = new ArrayList<>();
+    private ArrayList<String> _detailsList = new ArrayList<>();
+    private ArrayList<String> _datesList = new ArrayList<>();
+    private ArrayList<String> _idsList = new ArrayList<>();
 
     static class ViewHolder{
-        TextView textWork;
+        TextView textCode;
         TextView textField;
-        TextView textFromDate;
-        TextView textToDate;
+        TextView textFromTime;
+        TextView textToTime;
+        TextView textDetail;
+        TextView textDate;
+        TextView textId;
     }
 
-    TestAdapter(Context context, int itemLayoutId, String[] works, String[] fields,
-                String[] fromDates, String[] toDates){
+    TestAdapter(Context context, int itemLayoutId, ArrayList<String> codes, ArrayList<String> fields,
+                ArrayList<String> fromTimes, ArrayList<String> toTimes, ArrayList<String> details,
+                ArrayList<String> dates, ArrayList<String> ids){
         Log.i("Confirm", "TestAdapter constructor");
-        inflater = LayoutInflater.from(context);
-        layoutId = itemLayoutId;
-        worksList = works;
-        fieldList = fields;
-        fromDateList = fromDates;
-        toDateList = toDates;
+        _inflater = LayoutInflater.from(context);
+        _layoutId = itemLayoutId;
+        _codesList = codes;
+        _fieldsList = fields;
+        _fromTimesList = fromTimes;
+        _toTimesList = toTimes;
+        _detailsList = details;
+        _datesList = dates;
+        _idsList = ids;
     }
 
 
@@ -43,12 +55,12 @@ public class TestAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if(convertView == null){
-            convertView = inflater.inflate(layoutId, null);
+            convertView = _inflater.inflate(_layoutId, null);
             holder = new ViewHolder();
-            holder.textWork = convertView.findViewById(R.id.tvListContent);
+            holder.textCode = convertView.findViewById(R.id.tvListCode);
             holder.textField = convertView.findViewById(R.id.tvListField);
-            holder.textFromDate = convertView.findViewById(R.id.tvListFrom);
-            holder.textToDate = convertView.findViewById(R.id.tvListTo);
+            holder.textFromTime = convertView.findViewById(R.id.tvListFrom);
+            holder.textToTime = convertView.findViewById(R.id.tvListTo);
 
             convertView.setTag(holder);
         }
@@ -56,10 +68,10 @@ public class TestAdapter extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        holder.textWork.setText(worksList[position]);
-        holder.textField.setText(fieldList[position]);
-        holder.textFromDate.setText(fromDateList[position]);
-        holder.textToDate.setText(toDateList[position]);
+        holder.textCode.setText(_codesList.get(position));
+        holder.textField.setText(_fieldsList.get(position));
+        holder.textFromTime.setText(_fromTimesList.get(position));
+        holder.textToTime.setText(_toTimesList.get(position));
 
         return convertView;
     }
@@ -67,7 +79,7 @@ public class TestAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         Log.i("Confirm", "TestAdapter getCount()");
-        return worksList.length;
+        return _codesList.size();
     }
 
     @Override

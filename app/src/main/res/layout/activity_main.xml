@@ -5,23 +5,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#dfe"
+    android:padding="10dp"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/tvMainTitle"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:layout_marginBottom="50dp"
+        android:gravity="center_horizontal"
+        android:padding="10dp"
+        android:text="@string/tvMainTitle"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:background="#ffa500"
         android:onClick="onInputButtonClick"
-        android:text="@string/btnInput"/>
+        android:text="@string/btnInput" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:background="#ffa500"
         android:onClick="onStartButtonClick"
-        android:text="@string/btnStart"/>
+        android:text="@string/btnStart" />
 
 </LinearLayout>

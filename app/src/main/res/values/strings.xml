@@ -9,8 +9,18 @@
     <string name="tvInputDetail">詳細：</string>
     <string name="tvInputConfirm">この内容でよろしいですか</string>
 
-    <string name="tvTodoTitle">やることリスト</string>
-    <string name="tvConfirm">今日の作業の内容を確認してください</string>
+    <string name="tvEditTitle">作業内容を編集してください</string>
+
+    <string name="tvLabelDate">日付：</string>
+    <string name="tvLabelTime">時間：</string>
+    <string name="tvLabelField">場所：</string>
+    <string name="tvLabelCode">内容：</string>
+    <string name="tvLabelDetail">詳細：</string>
+
+    <string name="tvFromTo"> ～ </string>
+
+    <string name="tvTodoTitle">今日の作業リスト</string>
+    <string name="tvConfirm">今日の作業内容を確認してください</string>
     <string name="tvListFromTo">～</string>
 
     <string name="btnInput">入力する</string>
@@ -22,4 +32,7 @@
     <string name="btnEdit">変更する</string>
     <string name="btnResister">登録する</string>
     <string name="btnDelete">削除する</string>
+
+    <string name="tstResistered">登録しました</string>
+    <string name="tstError">登録に失敗しました</string>
 </resources>
