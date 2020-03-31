@@ -45,7 +45,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
     ArrayList<String> _dates = new ArrayList<>();
     ArrayList<String> _ids = new ArrayList<>();
 
-    String _today = "2020/3/18";
+    String _today = new String();
 
     Bundle _fieldBundle;
     Bundle _codeBundle;
@@ -54,7 +54,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
-        Log.i("Confirm", "TodoActivity onCreate");
+        Log.i("Logging", "TodoActivity onCreate");
 
         Intent intent = getIntent();
         _fieldBundle = intent.getBundleExtra("field");
@@ -63,19 +63,27 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
         //TextViewに本日の日付けを表示する処理
         showDate();
 
-        //DBからTodoリストを取得する処理
-        GetTodoDatas getTodoDatas = new GetTodoDatas();
-        getTodoDatas.execute();
+        //Bundleの値が取れていれば処理を継続する
+        if(_fieldBundle != null && _codeBundle != null) {
+            //DBからTodoリストを取得する処理
+            GetTodoDatas getTodoDatas = new GetTodoDatas();
+            getTodoDatas.execute();
+        }
+        else {
+            finish();
+        }
     }
 
 
+    //「戻る」ボタンで戻ってきた際にActivityをリロードする処理
     @Override
     protected void onRestart() {
-        Log.i("Confirm", "TodoActivity onRestart");
+        Log.i("Logging", "TodoActivity onRestart");
         super.onRestart();
         reload();
     }
 
+    //リロード処理
     public void reload() {
         Intent intent = getIntent();
         finish();
@@ -83,8 +91,8 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
         startActivity(intent);
     }
 
-    //画面のリストビューを呼び出す処理
-    public void acrivateAdapter(){
+    //画面のListViewを呼び出す処理
+    public void activateAdapter(){
         ListView listView = findViewById(R.id.lvTodoList);
         BaseAdapter adapter = new TestAdapter(this.getApplicationContext(), R.layout.list_items,
                 _codes, _fields, _fromTimes, _toTimes, _details, _dates, _ids);
@@ -96,19 +104,28 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //TextViewに日付を表示するための処理
     public void showDate(){
-        Log.i("Confirm", "TodoActivity showDate");
+        Log.i("Logging", "TodoActivity showDate");
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        Log.i("Confirm", "TodoActivity showDate simpleDateFormat: " + simpleDateFormat.format(date).toString());
+        Log.i("Logging", "TodoActivity showDate simpleDateFormat: " + simpleDateFormat.format(date));
 
+        //DB検索クエリ用のフォーマットを変数に格納
+        _today = simpleDateFormat.format(date);
+        Log.i("Logging", "TodoActivity showDate _today: " + _today);
+
+        //TextViewに表示用のフォーマット
+        simpleDateFormat = new SimpleDateFormat("MM/dd");
+        Log.i("Logging", "TodoActivity showDate simpleDateFormat: " + simpleDateFormat.format(date));
         TextView tvShowDate = findViewById(R.id.tvShowDate);
-        tvShowDate.setText(simpleDateFormat.format(date).toString());
+        tvShowDate.setText(simpleDateFormat.format(date));
     }
 
 
-    //addButtonClick
+    //AddButtonをClickした際の処理
     public void onAddButtonClick(View view){
-        Log.i("Confirm", "TodoActivity onAddButtonClick");
+        Log.i("Logging", "TodoActivity onAddButtonClick");
+
+        //InputActivityへ遷移
         Intent intent = new Intent(TodoActivity.this, InputActivity.class);
         intent.putExtra("field", _fieldBundle);
         intent.putExtra("code", _codeBundle);
@@ -116,11 +133,13 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    //completeButtonClick
+    //CompleteButtonをClickした際の処理
     public void onCompleteButtonClick(View view){
-        Log.i("Confirm", "TodoActivity onCompleteButtonClick");
+        Log.i("Logging", "TodoActivity onCompleteButtonClick");
+
+        //ConfirmActivityへ遷移
         Intent intent = new Intent(TodoActivity.this, ConfirmActivity.class);
-        intent.putExtra("codes", _codes);   //nameタグをcodesに変更する
+        intent.putExtra("codes", _codes);
         intent.putExtra("fields", _fields);
         intent.putExtra("fromTimes", _fromTimes);
         intent.putExtra("toTimes", _toTimes);
@@ -133,16 +152,16 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    //backButtonClick
+    //BackButtonをClickした際の処理
     public void onBackButtonClick(View view){
-        Log.i("Confirm", "TodoActivity onBackButtonClick");
+        Log.i("Logging", "TodoActivity onBackButtonClick");
         finish();
     }
 
 
+    //ListViewのアイテムをClickした際の処理
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.i("Confirm", "TodoActivity onItemClick");
         Log.i("Logging", "TodoActivity onItemClick position: " + position);
         String selectedCode = _codes.get(position);
         String selectedField = _fields.get(position);
@@ -155,6 +174,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.i("Logging", "TodoActivity onItemClick selectedDate: " + selectedDate);
         Log.i("Logging", "TodoActivity onItemClick selectedId: " + selectedId);
 
+        //EditActivityへ遷移
         Intent intent = new Intent(TodoActivity.this, EditActivity.class);
         intent.putExtra("code", selectedCode);
         intent.putExtra("field", selectedField);
@@ -170,6 +190,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    //非同期でDBからデータを取得するクラス
     private class GetTodoDatas extends AsyncTask<String, String, String>{
 
         @Override
@@ -199,8 +220,6 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
             jsonMiddleData.put("selector", jsonInnerKeyData);
 
-            //ArrayList<HashMap<String, String>> jsonFieldInnerArrayData = new ArrayList<>();
-            //jsonFieldInnerArrayData.add(jsonFieldInnerValueData);
             ArrayList<String> jsonInnerArrayData = new ArrayList<>();
             jsonInnerArrayData.add("fromTime");
             jsonInnerArrayData.add("toTime");
@@ -218,7 +237,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
             //APサーバーのURLを変数に格納
             String urlStr = "https://sakuranbo-mekaru2.mybluemix.net/common/android_find_cloudant";
-            Log.i("Confirm", "TodoActivity doInBackground urlStr: " + urlStr);
+            Log.i("Logging", "TodoActivity doInBackground urlStr: " + urlStr);
 
             HttpsURLConnection con = null;
             InputStream inputStream;
@@ -237,10 +256,10 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
                 OutputStream outputStream = con.getOutputStream();
 
                 if(jsonOuterData.size()>0){
-                    Log.i("Confirm", "TodoActivity doInBackground if");
+                    Log.i("Logging", "TodoActivity doInBackground if");
                     JSONObject jsonObject = new JSONObject(jsonOuterData);
                     String jsonText = jsonObject.toString();
-                    Log.i("Confirm", "TodoActivity doInBackground jsonText: " + jsonText);
+                    Log.i("Logging", "TodoActivity doInBackground jsonText: " + jsonText);
                     PrintStream printStream = new PrintStream(con.getOutputStream());
                     //PrintStream printStream = new PrintStream(outputStream);
                     printStream.print(jsonText);
@@ -250,15 +269,15 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 final int status = con.getResponseCode();
                 if(status == 200){
-                    Log.i("Confirm", "TodoActivity doInBackground response: " + status);
+                    Log.i("Logging", "TodoActivity doInBackground response: " + status);
                 }
                 else {
-                    Log.i("Confirm", "TodoActivity doInBackground error: " + status);
+                    Log.i("Logging", "TodoActivity doInBackground error: " + status);
                 }
 
                 inputStream = con.getInputStream();
                 response = is2String(inputStream);
-                Log.i("Confirm", "TodoActivity doInBackground response: " + response);
+                Log.i("Logging", "TodoActivity doInBackground response: " + response);
             } catch (ProtocolException e) {
                 e.printStackTrace();
             } catch (MalformedURLException e) {
@@ -268,7 +287,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             finally {
                 if(con != null){
-                    Log.i("Confirm", "TodoActivity doInBackground finally");
+                    Log.i("Logging", "TodoActivity doInBackground finally");
                     con.disconnect();
                 }
             }
@@ -276,6 +295,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
             return response;
         }
 
+        //InputStreamに入ってきたデータをString型に変換する処理
         private String is2String(InputStream is) throws IOException{
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             StringBuffer stringBuffer = new StringBuffer();
@@ -290,7 +310,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         protected void onPostExecute(String response) {
             super.onPostExecute(response);
-            Log.i("Confirm", "TodoActivity doPostExecute response: " + response);
+            Log.i("Logging", "TodoActivity doPostExecute response: " + response);
 
             String fromTime = "fromTime";
             String toTime = "toTime";
@@ -305,7 +325,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
                 JSONArray datasJson = rootJson.getJSONArray("data");
 
                 int len = datasJson.length();
-                Log.i("Confirm", "TodoActivity doPostExecute len: " + len);
+                Log.i("Logging", "TodoActivity doPostExecute len: " + len);
                 for(int i=0; i<len; i++){
                     JSONObject dataJson = datasJson.getJSONObject(i);
                     String dataFromTime = "";
@@ -334,10 +354,11 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
                     _dates.add(dataDate);
                     _ids.add(dataId);
 
-                    acrivateAdapter();
+                    //ListView呼び出しメソッドを呼び出し
+                    activateAdapter();
                 }
             } catch (JSONException e) {
-                Log.i("Confirm", "TodoActivity doPostExecute JSONException");
+                Log.i("Logging", "TodoActivity doPostExecute JSONException");
                 e.printStackTrace();
             }
 

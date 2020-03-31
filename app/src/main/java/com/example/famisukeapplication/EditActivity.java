@@ -82,13 +82,13 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         ArrayList<String> codes = new ArrayList<>();
         codes = _codeBundle.getStringArrayList("code");
         String code = codes.get(0);
-        Log.i("Confirm", "EditActivity onCreate code: " + code);
+        Log.i("Logging", "EditActivity onCreate code: " + code);
         int selectedCodeIndex = codes.indexOf(_selectedCode);
 
         ArrayList<String> fields = new ArrayList<>();
         fields = _fieldBundle.getStringArrayList("field");
         String field = fields.get(0);
-        Log.i("Confirm", "EditActivity onCreate field: " + field);
+        Log.i("Logging", "EditActivity onCreate field: " + field);
         int selectedFieldIndex = fields.indexOf(_selectedField);
 
         //スピナーにアダプターとリスナーをセット
@@ -97,7 +97,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                 EditActivity.this, android.R.layout.simple_spinner_item, codes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _spSelectedCode.setAdapter(adapter);
-        _spSelectedCode.setOnItemSelectedListener(new EditActivity.SpinnerItemSelectListener());
+        //_spSelectedCode.setOnItemSelectedListener(new EditActivity.SpinnerItemSelectListener());
         _spSelectedCode.setSelection(selectedCodeIndex);
 
         //「圃場」選択スピナー
@@ -105,7 +105,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                 EditActivity.this, android.R.layout.simple_spinner_item, fields);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _spSelectedField.setAdapter(adapter);
-        _spSelectedField.setOnItemSelectedListener(new EditActivity.SpinnerItemSelectListener());
+        //_spSelectedField.setOnItemSelectedListener(new EditActivity.SpinnerItemSelectListener());
         _spSelectedField.setSelection(selectedFieldIndex);
 
         //TextViewクラスとEditTextクラスのオブジェクトにデータをセット
@@ -117,50 +117,42 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
 
     //スピナーにセットするリスナークラス
-    private class SpinnerItemSelectListener implements AdapterView.OnItemSelectedListener{
+//    private class SpinnerItemSelectListener implements AdapterView.OnItemSelectedListener{
+//
+//        @Override
+//        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//            Spinner spinner = (Spinner)parent;
+//            String item = (String)spinner.getSelectedItem();
+//            Log.i("Logging", "EditActivity onItemSelected item: " + item);
+//            //スピナーのidで処理を分岐させる処理
+//            int layoutId = spinner.getId();
+//            switch (layoutId){
+//                case R.id.spSelectedCode:
+//                    Log.i("Logging", "EditActivity onItemSelected switch: " + item);
+////                    tvCode.setText(item);
+//                    break;
+//                case R.id.spSelectedField:
+//                    Log.i("Logging", "EditActivity onItemSelected switch: " + item);
+////                    tvField.setText(item);
+//                    break;
+//            }
+//        }
+//
+//        @Override
+//        public void onNothingSelected(AdapterView<?> parent) {
+//            Log.i("Logging", "EditActivity onNothingSelected");
+//        }
+//    }
 
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Spinner spinner = (Spinner)parent;
-            String item = (String)spinner.getSelectedItem();
-            Log.i("Confirm", "EditActivity onItemSelected item: " + item);
-            //スピナーのidで処理を分岐させる処理
-            int layoutId = spinner.getId();
-            switch (layoutId){
-                case R.id.spSelectedCode:
-                    Log.i("Confirm", "EditActivity onItemSelected switch: " + item);
-//                    tvCode.setText(item);
-                    break;
-                case R.id.spSelectedField:
-                    Log.i("Confirm", "EditActivity onItemSelected switch: " + item);
-//                    tvField.setText(item);
-                    break;
-            }
-        }
 
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            Log.i("Confirm", "EditActivity onNothingSelected");
-        }
-    }
-
-
-    //editButtonClick
+    //EditButtonをClickした際の処理
     public void onEditButtonClick(View view){
-        Log.i("Confirm", "EditActivity onEditButtonClick");
-        //ToDo  Send datas to Web Server to UPDATE datas on DataBase
+        Log.i("Logging", "EditActivity onEditButtonClick");
 
         _editDate = (String) _tvDate.getText();
         _editFrom = (String) _tvFromTime.getText();
         _editTo = (String) _tvToTime.getText();
         _editDetail = _etDetail.getText().toString();
-
-        Log.i("Confirm", "EditActivity onEditButtonClick _tvDate.getText(): " + _tvDate.getText());
-        Log.i("Confirm", "EditActivity onEditButtonClick _tvFromTime.getText(): " + _tvFromTime.getText());
-        Log.i("Confirm", "EditActivity onEditButtonClick _tvToTime.getText(): " + _tvToTime.getText());
-        Log.i("Confirm", "EditActivity onEditButtonClick _spSelectedField: " + _spSelectedField);
-        Log.i("Confirm", "EditActivity onEditButtonClick _spSelectedCode: " + _spSelectedCode);
-        Log.i("Confirm", "EditActivity onEditButtonClick _etDetail.getText(): " + _etDetail.getText().toString());
 
         if(_editDate.equals("")){
             _editDate = _selectedDate;
@@ -174,33 +166,27 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         if(_editDetail.equals("")){
             _editDetail = _selectedDetail;
         }
-//        _editDate = (_tvDate.getText().equals("")) ? (String) _tvDate.getText() : _selectedDate;
-//        _editFrom = (_tvFromTime.getText() != "") ? (String) _tvFromTime.getText() : _selectedFromTime;
-//        _editTo = (_tvToTime.getText() != "") ? (String) _tvToTime.getText() : _selectedToTime;
+
         _editField = (_spSelectedField != null) ? (String) _spSelectedField.getSelectedItem() : _selectedField;
         _editCode = (_spSelectedCode != null) ? (String) _spSelectedCode.getSelectedItem() : _selectedCode;
-//        _editDetail = (_etDetail.getText().toString().equals("")) ? _selectedDetail : _etDetail.getText().toString();
-        Log.i("Confirm", "EditActivity onEditButtonClick _editDate: " + _editDate);
-        Log.i("Confirm", "EditActivity onEditButtonClick _editDetail: " + _editDetail);
 
         String flag = "update";
-        DeleteTodoData deleteTodoData = new DeleteTodoData();
-        deleteTodoData.execute(flag);
+        ChangeTodoData updateTodoData = new ChangeTodoData();
+        updateTodoData.execute(flag);
     }
 
-    //deleteButtonClick
+    //DeleteButtonをClickした際の処理
     public void onDeleteButtonClick(View view){
-        Log.i("Confirm", "EditActivity onDeleteButtonClick");
-        //ToDo  Send datas to Web Server to DELETE datas on DataBase
-        String flag = "delete";
-        DeleteTodoData deleteTodoData = new DeleteTodoData();
-        deleteTodoData.execute(flag);
+        Log.i("Logging", "EditActivity onDeleteButtonClick");
 
+        String flag = "delete";
+        ChangeTodoData deleteTodoData = new ChangeTodoData();
+        deleteTodoData.execute(flag);
     }
 
-    //backButtonClick
+    //BackButtonをClickした際の処理
     public void onBackButtonClick(View view){
-        Log.i("Confirm", "EditActivity onBackButtonClick");
+        Log.i("Logging", "EditActivity onBackButtonClick");
         finish();
     }
 
@@ -208,15 +194,36 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
     //DatePickerの設定
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Log.i("Confirm", "EditActivity onDateSet");
-        String str = String.format(Locale.JAPAN, "%d/%d/%d",year, month+1, dayOfMonth);
-        Log.i("Confirm", "EditActivity onDateSet str: " + str);
-        _tvDate.setText(str);
+        Log.i("Logging", "EditActivity onDateSet");
+        String yearString;
+        String monthString;
+        String dayString;
+
+        month = month + 1;
+
+        if(month < 10){
+            monthString = "0" + String.valueOf(month);
+        }
+        else{
+            monthString = String.valueOf(month);
+        }
+
+        if(dayOfMonth < 10){
+            dayString = "0" + String.valueOf(dayOfMonth);
+        }
+        else{
+            dayString = String.valueOf(dayOfMonth);
+        }
+        yearString = String.valueOf(year);
+
+        String date = yearString + "/" + monthString + "/" + dayString;
+        Log.i("Logging", "InputActivity onDateSet date: " + date);
+        _tvDate.setText(date);
     }
 
     //DatePickerのonClickメソッド
     public void showEditDatePickerDialog(View view){
-        Log.i("Confirm", "EditActivity showDatePickerDialog");
+        Log.i("Logging", "EditActivity showDatePickerDialog");
         //FragmentにActivity情報を渡す処理
         Bundle bundle = new Bundle();
         bundle.putString("activity", "Edit");
@@ -230,19 +237,38 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
     //TimePickerの設定
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Log.i("Confirm", "EditActivity onTimeSet");
-        String str = String.format(Locale.JAPAN, "%d:%d", hourOfDay, minute);
-        Log.i("Confirm", "EditActivity onTimeSet str: " + str);
-        Log.i("Confirm", "EditActivity onTimeSet _timeId: " + _timeId);
+        Log.i("Logging", "EditActivity onTimeSet");
+
+        String hourString;
+        String minuteString;
+
+        if(hourOfDay < 10){
+            hourString = "0" + String.valueOf(hourOfDay);
+        }
+        else {
+            hourString = String.valueOf(hourOfDay);
+        }
+
+        if(minute < 10){
+            minuteString = "0" + String.valueOf(minute);
+        }
+        else {
+            minuteString = String.valueOf(minute);
+        }
+
+        String time = hourString + ":" + minuteString;
+        Log.i("Logging", "InputActivity onTimeSet time: " + time);
+
+        Log.i("Logging", "EditActivity onTimeSet _timeId: " + _timeId);
         switch (_timeId){
             case R.id.tvEditFrom:
-                Log.i("Confirm", "EditActivity onTimeSet switch from");
-                _tvFromTime.setText(str);
+                Log.i("Logging", "EditActivity onTimeSet switch from");
+                _tvFromTime.setText(time);
                 _timeId = 0;
                 break;
             case R.id.tvEditTo:
-                Log.i("Confirm", "EditActivity onTimeSet switch to");
-                _tvToTime.setText(str);
+                Log.i("Logging", "EditActivity onTimeSet switch to");
+                _tvToTime.setText(time);
                 _timeId = 0;
                 break;
         }
@@ -258,17 +284,17 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         dialogFragment.setArguments(bundle);
         dialogFragment.show(getSupportFragmentManager(), "TimePicker");
         _timeId = view.getId();
-        Log.i("Confirm", "EditActivity showEditTimePickerDialog _timeId: " + _timeId);
+        Log.i("Logging", "EditActivity showEditTimePickerDialog _timeId: " + _timeId);
     }
 
 
-    //
-    private class DeleteTodoData extends AsyncTask<String, String, Integer>{
+    //DBの内容に変更を加える処理
+    private class ChangeTodoData extends AsyncTask<String, String, Integer>{
         @Override
         protected Integer doInBackground(String... strings) {
 
             String flag = strings[0];
-            Log.i("Confirm", "EditActivity doInBackground flag: " + flag);
+            Log.i("Logging", "EditActivity doInBackground flag: " + flag);
             int status = 0;
 
             //DBのテーブル名
@@ -279,6 +305,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
             HashMap<String, Object> jsonOuterData = new HashMap<>();
 
+            //押下ボタンが「変更」か「削除」かで処理を分岐
             if(flag.equals("delete")) {
                 //DBクエリをPOSTするために成形
                 HashMap<String, String> jsonInnerValueData = new HashMap<>();
@@ -287,13 +314,12 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                 HashMap<String, Object> jsonMiddleData = new HashMap<>();
                 jsonMiddleData.put("selector", jsonInnerValueData);
 
-//                HashMap<String, Object> jsonOuterData = new HashMap<>();
                 jsonOuterData.put("table", table);
                 jsonOuterData.put("body", jsonMiddleData);
 
                 //APサーバーのURLを変数に格納
                 urlStr = "https://sakuranbo-mekaru2.mybluemix.net/common/android_delete_cloudant";
-                Log.i("Confirm", "EditActivity doInBackground delete urlStr: " + urlStr);
+                Log.i("Logging", "EditActivity doInBackground delete urlStr: " + urlStr);
             }
             else if(flag.equals("update")){
                 //各入力項目をリストに格納
@@ -306,13 +332,12 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                 innerJsonData.put("detail", _editDetail);
                 innerJsonData.put("_id", _selectedId);
 
-//                HashMap<String, Object> jsonData = new HashMap<>();
                 jsonOuterData.put("table", "todo");
                 jsonOuterData.put("data", innerJsonData);
 
                 //APサーバーのURLを変数に格納
                 urlStr = "https://sakuranbo-mekaru2.mybluemix.net/common/android_post_cloudant";
-                Log.i("Confirm", "EditActivity doInBackground update urlStr: " + urlStr);
+                Log.i("Logging", "EditActivity doInBackground update urlStr: " + urlStr);
             }
 
             HttpsURLConnection con = null;
@@ -332,10 +357,10 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
                 OutputStream outputStream = con.getOutputStream();
 
                 if(jsonOuterData.size()>0){
-                    Log.i("Confirm", "EditActivity doInBackground if");
+                    Log.i("Logging", "EditActivity doInBackground if");
                     JSONObject jsonObject = new JSONObject(jsonOuterData);
                     String jsonText = jsonObject.toString();
-                    Log.i("Confirm", "EditActivity doInBackground jsonText: " + jsonText);
+                    Log.i("Logging", "EditActivity doInBackground jsonText: " + jsonText);
                     PrintStream printStream = new PrintStream(con.getOutputStream());
                     //PrintStream printStream = new PrintStream(outputStream);
                     printStream.print(jsonText);
@@ -345,15 +370,15 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
 
                 status = con.getResponseCode();
                 if(status == 201){
-                    Log.i("Confirm", "EditActivity doInBackground response: " + status);
+                    Log.i("Logging", "EditActivity doInBackground response: " + status);
                 }
                 else {
-                    Log.i("Confirm", "EditActivity doInBackground error: " + status);
+                    Log.i("Logging", "EditActivity doInBackground error: " + status);
                 }
 
                 inputStream = con.getInputStream();
                 response = is2String(inputStream);
-                Log.i("Confirm", "TodoActivity doInBackground response: " + response);
+                Log.i("Logging", "TodoActivity doInBackground response: " + response);
             }
             catch (ProtocolException e) {
                 e.printStackTrace();
@@ -366,7 +391,7 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
             }
             finally {
                 if(con != null){
-                    Log.i("Confirm", "EditActivity doInBackground finally");
+                    Log.i("Logging", "EditActivity doInBackground finally");
                     con.disconnect();
                 }
             }
@@ -389,11 +414,11 @@ public class EditActivity extends AppCompatActivity implements DatePickerDialog.
         protected void onPostExecute(Integer status) {
             super.onPostExecute(status);
             if(status == 201){
-                Log.i("Confirm", "EditActivity onPostExecute status: " + status);
+                Log.i("Logging", "EditActivity onPostExecute status: " + status);
                 Toast.makeText(EditActivity.this, R.string.tstResistered, Toast.LENGTH_LONG).show();
             }
             else {
-                Log.i("Confirm", "EditActivity onPostExecute status: " + status);
+                Log.i("Logging", "EditActivity onPostExecute status: " + status);
                 Toast.makeText(EditActivity.this, R.string.tstError, Toast.LENGTH_LONG).show();
             }
         }

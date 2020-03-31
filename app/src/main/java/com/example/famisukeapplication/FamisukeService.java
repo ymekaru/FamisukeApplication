@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -46,7 +47,7 @@ public class FamisukeService extends Service {
                 && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 0,
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 59000, 0,
                 locationListener);
     }
 
@@ -115,9 +116,14 @@ public class FamisukeService extends Service {
             Log.i("Confirm", "AsyncTask doInBackground latitude: " + latitude);
             Log.i("Confirm", "AsyncTask doInBackground longitude: " + longitude);
 
+//            Date date = new Date();
+//            long time = date.getTime();
+//            Timestamp timestamp = new Timestamp(time);
+
             Date date = new Date();
-            long time = date.getTime();
-            Timestamp timestamp = new Timestamp(time);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            String timeSramp = simpleDateFormat.format(date);
+            Log.i("Check", "AsyncTask doInBackground timeStamp: " + timeSramp);
 
             //緯度経度をDBに登録するために成形
             HashMap<String, Object> jsonData = new HashMap<>();
@@ -126,7 +132,8 @@ public class FamisukeService extends Service {
             HashMap<String, String> innerJson = new HashMap<>();
             innerJson.put("latitude", latitude);
             innerJson.put("longitude", longitude);
-            innerJson.put("currentTime", timestamp.toString());
+//            innerJson.put("currentTime", timestamp.toString());
+            innerJson.put("currentTime", timeSramp);
 
             jsonData.put("data", innerJson);
 

@@ -51,25 +51,20 @@ public class InputActivity extends AppCompatActivity implements DatePickerDialog
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("Confirm", "InputActivity onCreate");
+        Log.i("Logging", "InputActivity onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
 
+        //前画面から渡されたデータを受け取りArrayListに格納する処理
         Intent intent = getIntent();
         fieldBundle = intent.getBundleExtra("field");
         codeBundle = intent.getBundleExtra("code");
 
-        Log.i("Confirm", "InputActivity onCreate");
+        ArrayList<String> fields = new ArrayList<>();
+        fields = fieldBundle.getStringArrayList("field");
 
         ArrayList<String> codes = new ArrayList<>();
         codes = codeBundle.getStringArrayList("code");
-        String code = codes.get(0);
-        Log.i("Confirm", "InputActivity onCreate code: " + code);
-
-        ArrayList<String> fields = new ArrayList<>();
-        fields = fieldBundle.getStringArrayList("field");
-        String field = fields.get(0);
-        Log.i("Confirm", "InputActivity onCreate field: " + field);
 
         //Spinnerの画面毎のオブジェクトを作成し変数に格納
         spSelectCode = findViewById(R.id.spSelectCode);
@@ -88,26 +83,48 @@ public class InputActivity extends AppCompatActivity implements DatePickerDialog
                 InputActivity.this, android.R.layout.simple_spinner_item, codes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spSelectCode.setAdapter(adapter);
-        spSelectCode.setOnItemSelectedListener(new SpinnerItemSelectListener());
-        //「圃場」選択スピナー
+//        spSelectCode.setOnItemSelectedListener(new SpinnerItemSelectListener());
+//        //「圃場」選択スピナー
         adapter = new ArrayAdapter<>(
                 InputActivity.this, android.R.layout.simple_spinner_item, fields);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spSelectField.setAdapter(adapter);
-        spSelectField.setOnItemSelectedListener(new SpinnerItemSelectListener());
+        //spSelectField.setOnItemSelectedListener(new SpinnerItemSelectListener());
 
     }
 
 
+    //DatePickerFragmentからの値を表示する処理
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        Log.i("Confirm", "InputActivity onDateSet");
-        String str = String.format(Locale.JAPAN, "%d/%d/%d",year, month+1, dayOfMonth);
-        Log.i("Confirm", "InputActivity onDateSet str: " + str);
-        tvInputDate.setText(str);
+        Log.i("Logging", "InputActivity onDateSet");
+        String yearString;
+        String monthString;
+        String dayString;
+
+        month = month + 1;
+
+        if(month < 10){
+            monthString = "0" + String.valueOf(month);
+        }
+        else{
+            monthString = String.valueOf(month);
+        }
+
+        if(dayOfMonth < 10){
+            dayString = "0" + String.valueOf(dayOfMonth);
+        }
+        else{
+            dayString = String.valueOf(dayOfMonth);
+        }
+        yearString = String.valueOf(year);
+
+        String date = yearString + "/" + monthString + "/" + dayString;
+        Log.i("Logging", "InputActivity onDateSet date: " + date);
+        tvInputDate.setText(date);
     }
 
-
+    //DatePickerFragmentを生成する処理
     public void showDatePickerDialog(View view){
         //FragmentにActivity情報を渡す処理
         Bundle bundle = new Bundle();
@@ -119,27 +136,46 @@ public class InputActivity extends AppCompatActivity implements DatePickerDialog
     }
 
 
+    //TimePickerFragmentからの値を表示する処理
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Log.i("Confirm", "InputActivity onTimeSet");
-        String str = String.format(Locale.JAPAN, "%d:%d", hourOfDay, minute);
-        Log.i("Confirm", "InputActivity onTimeSet str: " + str);
+        Log.i("Logging", "InputActivity onTimeSet");
+
+        String hourString;
+        String minuteString;
+
+        if(hourOfDay < 10){
+            hourString = "0" + String.valueOf(hourOfDay);
+        }
+        else {
+            hourString = String.valueOf(hourOfDay);
+        }
+
+        if(minute < 10){
+            minuteString = "0" + String.valueOf(minute);
+        }
+        else {
+            minuteString = String.valueOf(minute);
+        }
+
+        String time = hourString + ":" + minuteString;
+        Log.i("Logging", "InputActivity onTimeSet time: " + time);
 
         switch (_timeId){
             case R.id.tvInputFrom:
-                Log.i("Confirm", "InputActivity onTimeSet switch from");
-                tvInputFrom.setText(str);
+                Log.i("Logging", "InputActivity onTimeSet switch from");
+                tvInputFrom.setText(time);
                 _timeId = 0;
                 break;
             case R.id.tvInputTo:
-                Log.i("Confirm", "InputActivity onTimeSet switch to");
-                tvInputTo.setText(str);
+                Log.i("Logging", "InputActivity onTimeSet switch to");
+                tvInputTo.setText(time);
                 _timeId = 0;
                 break;
         }
     }
 
-
+    //TimePickerFragmentを生成する処理
     public void showTimePickerDialog(View view){
         //FragmentにActivity情報を渡す処理
         Bundle bundle = new Bundle();
@@ -151,101 +187,57 @@ public class InputActivity extends AppCompatActivity implements DatePickerDialog
         _timeId = view.getId();
     }
 
-    String spinnerItem;
-    //スピナーにセットするリスナークラス
-    private class SpinnerItemSelectListener implements AdapterView.OnItemSelectedListener{
 
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Spinner spinner = (Spinner)parent;
-            String item = (String)spinner.getSelectedItem();
-            Log.i("Confirm", "InputActivity onItemSelected item: " + item);
-            //スピナーのidで処理を分岐させる処理
-            int layoutId = spinner.getId();
-            switch (layoutId){
-                case R.id.spSelectCode:
-                    Log.i("Confirm", "InputActivity onItemSelected switch: " + item);
-//                    tvCode.setText(item);
-                    break;
-                case R.id.spSelectField:
-                    Log.i("Confirm", "InputActivity onItemSelected switch: " + item);
-//                    tvField.setText(item);
-                    break;
-            }
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            Log.i("Confirm", "InputActivity onNothingSelected");
-        }
-    }
-
-
-//    //TextWatcherでEditTextの記入を監視する処理
-//    private class GenericTextwatcher implements TextWatcher {
+//    //スピナーにセットするリスナークラス
+//    private class SpinnerItemSelectListener implements AdapterView.OnItemSelectedListener{
 //
-//        private View view;
-//
-//        private GenericTextwatcher(View view){
-//            this.view = view;
+//        @Override
+//        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//            Spinner spinner = (Spinner)parent;
+//            String item = (String)spinner.getSelectedItem();
+//            Log.i("Logging", "InputActivity onItemSelected item: " + item);
+//            //スピナーのidで処理を分岐させる処理
+//            int layoutId = spinner.getId();
+//            switch (layoutId){
+//                case R.id.spSelectCode:
+//                    Log.i("Logging", "InputActivity onItemSelected switch: " + item);
+////                    tvCode.setText(item);
+//                    break;
+//                case R.id.spSelectField:
+//                    Log.i("Logging", "InputActivity onItemSelected switch: " + item);
+////                    tvField.setText(item);
+//                    break;
+//            }
 //        }
 //
 //        @Override
-//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//
-//        @Override
-//        public void onTextChanged(CharSequence s, int start, int before, int count) {}
-//
-//        @Override
-//        public void afterTextChanged(Editable s) {
-//            Log.i("Confirm", "Input GenericTextwatcher afterTextChanged");
-//            String inputWord = s.toString();
-//
-//            //入力されている画面部品のidを取得し変数に格納
-//            int id = view.getId();
-//
-//            switch (id){
-//                case R.id.etInputDate:
-//                    tvDate.setText(inputWord);
-//                    break;
-//                case R.id.etInputFromDate:
-//                    tvFromDate.setText(inputWord);
-//                    break;
-//                case R.id.etInputToDate:
-//                    tvToDate.setText(inputWord);
-//                    break;
-//                case R.id.etInputDetail:
-//                    tvDetail.setText(inputWord);
-//                    break;
-//
-//                default:
-//                    break;
-//            }
+//        public void onNothingSelected(AdapterView<?> parent) {
+//            Log.i("Logging", "InputActivity onNothingSelected");
 //        }
 //    }
 
 
-    //inputButtonClick
+    //ResisterButtonをClickした際の処理
     public void onResisterButtonClick(View view){
-        Log.i("Confirm", "Input onResisterButtonClick");
+        Log.i("Logging", "Input onResisterButtonClick");
         //ToDo  Send datas to Web Server to POST datas on DataBase
-        //String inputDate, inputFrom, inputTo, inputField, inputCode, inputDetail;
         _inputDate = (String) tvInputDate.getText();
         _inputFrom = (String) tvInputFrom.getText();
         _inputTo = (String) tvInputTo.getText();
         _inputField = (String) spSelectField.getSelectedItem();
         _inputCode = (String) spSelectCode.getSelectedItem();
         _inputDetail = etInputDetail.getText().toString();
-        Log.i("Confirm", "Input onResisterButtonClick inputDate: " + _inputDetail);
+        Log.i("Logging", "Input onResisterButtonClick inputDate: " + _inputDetail);
 
+        //DBにデータをPOSTするクラスのインスタンスを生成し実行する処理
         PostInputData postInputData = new PostInputData();
         postInputData.execute();
     }
 
 
-    //backButtonClick
+    //BackButtonをClickした際の処理
     public void onBackButtonClick(View view){
-        Log.i("Confirm", "Input onBackButtonClick");
+        Log.i("Logging", "Input onBackButtonClick");
         finish();
     }
 
@@ -289,7 +281,7 @@ public class InputActivity extends AppCompatActivity implements DatePickerDialog
                 if(jsonData.size()>0){
                     JSONObject jsonObject = new JSONObject(jsonData);
                     String jsonText = jsonObject.toString();
-                    Log.i("Confirm", "InputActivity doInBackground jsonText: " + jsonText);
+                    Log.i("Logging", "InputActivity doInBackground jsonText: " + jsonText);
                     //PrintStream printStream = new PrintStream(con.getOutputStream());
                     PrintStream printStream = new PrintStream(outputStream);
                     printStream.print(jsonText);
@@ -299,10 +291,10 @@ public class InputActivity extends AppCompatActivity implements DatePickerDialog
 
                 status = con.getResponseCode();
                 if(status == 201){
-                    Log.i("Confirm", "InputActivity doInBackground response: " + status);
+                    Log.i("Logging", "InputActivity doInBackground response: " + status);
                 }
                 else {
-                    Log.i("Confirm", "InputActivity doInBackground error: " + status);
+                    Log.i("Logging", "InputActivity doInBackground error: " + status);
                 }
             }
             catch (ProtocolException e) {
@@ -316,7 +308,7 @@ public class InputActivity extends AppCompatActivity implements DatePickerDialog
             }
             finally {
                 if(con != null){
-                    Log.i("Confirm", "InputActivity doInBackground finally");
+                    Log.i("Logging", "InputActivity doInBackground finally");
                     con.disconnect();
                 }
             }
@@ -327,11 +319,11 @@ public class InputActivity extends AppCompatActivity implements DatePickerDialog
         protected void onPostExecute(Integer status) {
             super.onPostExecute(status);
             if(status == 201){
-                Log.i("Confirm", "InputActivity onPostExecute status: " + status);
+                Log.i("Logging", "InputActivity onPostExecute status: " + status);
                 Toast.makeText(InputActivity.this, R.string.tstResistered, Toast.LENGTH_LONG).show();
             }
             else {
-                Log.i("Confirm", "InputActivity onPostExecute status: " + status);
+                Log.i("Logging", "InputActivity onPostExecute status: " + status);
                 Toast.makeText(InputActivity.this, R.string.tstError, Toast.LENGTH_LONG).show();
             }
 

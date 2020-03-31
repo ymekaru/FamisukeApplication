@@ -43,14 +43,13 @@ public class ConfirmActivity extends AppCompatActivity implements AdapterView.On
     Bundle _fieldBundle;
     Bundle _codeBundle;
 
-    String _today = "2020/3/18";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("Confirm", "ConfirmActivity onCreate");
+        Log.i("Logging", "ConfirmActivity onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm);
 
+        //前Activityからのデータを受け取る処理
         Intent intent = getIntent();
         _codes = intent.getStringArrayListExtra("codes");
         _fields = intent.getStringArrayListExtra("fields");
@@ -62,12 +61,12 @@ public class ConfirmActivity extends AppCompatActivity implements AdapterView.On
         _fieldBundle = intent.getBundleExtra("fieldBundle");
         _codeBundle = intent.getBundleExtra("codeBundle");
 
-        acrivateAdapter();
+        activateAdapter();
     }
 
 
-    //画面のリストビューを呼び出す処理
-    public void acrivateAdapter(){
+    //画面のListViewを呼び出す処理
+    public void activateAdapter(){
         ListView listView = findViewById(R.id.lvConfirm);
         BaseAdapter adapter = new TestAdapter(this.getApplicationContext(), R.layout.list_items,
                 _codes, _fields, _fromTimes, _toTimes, _details, _dates, _ids);
@@ -77,9 +76,9 @@ public class ConfirmActivity extends AppCompatActivity implements AdapterView.On
     }
 
 
-    //resisterButtonClick
+    //ResisterButtonをClickした際の処理
     public void onResisterButtonClick(View view) {
-        Log.i("Confirm", "ConfirmActivity onResisterButtonClick");
+        Log.i("Logging", "ConfirmActivity onResisterButtonClick");
         //ToDo  Send datas to Web Server to POST datas on DataBase
 
         //Serviceの処理を停止する処理
@@ -88,16 +87,16 @@ public class ConfirmActivity extends AppCompatActivity implements AdapterView.On
     }
 
 
-    //backButtonClick
+    //BackButtonをClickした際の処理
     public void onBackButtonClick(View view) {
-        Log.i("Confirm", "ConfirmActivity onBackButtonClick");
+        Log.i("Logging", "ConfirmActivity onBackButtonClick");
         finish();
     }
 
 
+    //ListViewのアイテムをClickした際の処理
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.i("Confirm", "ConfirmActivity onItemClick");
         Log.i("Logging", "ConfirmActivity onItemClick position: " + position);
         String selectedCode = _codes.get(position);
         String selectedField = _fields.get(position);
@@ -107,6 +106,7 @@ public class ConfirmActivity extends AppCompatActivity implements AdapterView.On
         String selectedDate = _dates.get(position);
         String selectedId = _ids.get(position);
 
+        //EditActivityへ遷移
         Intent intent = new Intent(ConfirmActivity.this, EditActivity.class);
         intent.putExtra("code", selectedCode);
         intent.putExtra("field", selectedField);

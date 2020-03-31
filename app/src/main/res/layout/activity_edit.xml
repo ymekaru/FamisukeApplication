@@ -170,8 +170,8 @@ android:layout_height="match_parent">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onEditButtonClick"
-            android:text="@string/btnEdit" />
+            android:onClick="onBackButtonClick"
+            android:text="@string/btnBack" />
 
         <Button
             android:layout_width="wrap_content"
@@ -182,8 +182,8 @@ android:layout_height="match_parent">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onBackButtonClick"
-            android:text="@string/btnBack" />
+            android:onClick="onEditButtonClick"
+            android:text="@string/btnEdit" />
 
     </LinearLayout>
 

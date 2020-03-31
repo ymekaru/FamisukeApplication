@@ -61,6 +61,7 @@ public class TestAdapter extends BaseAdapter {
             holder.textField = convertView.findViewById(R.id.tvListField);
             holder.textFromTime = convertView.findViewById(R.id.tvListFrom);
             holder.textToTime = convertView.findViewById(R.id.tvListTo);
+            holder.textDetail = convertView.findViewById(R.id.tvListDetail);
 
             convertView.setTag(holder);
         }
@@ -72,6 +73,7 @@ public class TestAdapter extends BaseAdapter {
         holder.textField.setText(_fieldsList.get(position));
         holder.textFromTime.setText(_fromTimesList.get(position));
         holder.textToTime.setText(_toTimesList.get(position));
+        holder.textDetail.setText(_detailsList.get(position));
 
         return convertView;
     }
